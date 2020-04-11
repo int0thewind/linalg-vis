@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "linalg-vis"
+    }
+  },
+  "defaultProject": "linalg-vis",
+  "cli": {
+    "analytics": "5f27b7f3-1d25-489c-97b6-f780c3de63d8"
+  }
 }
