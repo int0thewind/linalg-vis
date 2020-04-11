@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Font usage:
+ * font-family: 'Source Sans Pro', sans-serif;
+ * font-family: 'Merriweather', serif;
+ */
+
+body {
+    background-image: url(background/webb.png);
+    background-repeat: repeat;
+}
+
+h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 32pt;
+    font-style: bold;
+    text-align: center;
+    text-shadow: grey 1px 0 1px;
+}
+
+p.description {
+    text-align: center;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-style: italic;
+    font-size: 12pt;
+    text-shadow: grey 0.5px 0 0.5px;
+    margin: auto;
+    width: min(80vw, 500px);
+}
