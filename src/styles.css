@@ -15,10 +15,10 @@ h1 {
     font-size: 32pt;
     font-style: bold;
     text-align: center;
-    text-shadow: grey 1px 0 1px;
+    text-shadow: grey 1px 1px;
 }
 
-p.description {
+p.desc {
     text-align: center;
     font-family: 'Source Sans Pro', sans-serif;
     font-style: italic;

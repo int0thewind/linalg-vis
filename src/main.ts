@@ -11,7 +11,7 @@ if (environment.production) {
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
 
-const github = document.querySelector('p.description#github');
+const github = document.querySelector('p.desc#github');
 
 // Fetch GitHub info
 fetch('https://api.github.com/repos/int0thewind/linalg-vis/commits')
