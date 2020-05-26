@@ -1,0 +1,69 @@
+<div class='board'>
+    <svg class='board'></svg>
+    <div class="control">
+
+        <h3>Matrix:</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>1</th>
+                    <th>2</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><input type="text" name="r1c1" id="matrix"></td>
+                    <td><input type="text" name="r1c2" id="matrix"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><input type="text" name="r2c1" id="matrix"></td>
+                    <td><input type="text" name="r2c2" id="matrix"></td>
+                </tr>
+            </table>
+        <br>
+        
+        <h3>Objects: </h3>
+        <div class="objects">
+            <select name="object" id="object"></select>
+            <span>
+                <select name="object-select" id="object-select"></select>
+                <button name="add-object">Add Obejct</button>
+            </span>
+        </div>
+        <br>
+
+        <h3>Matrix Info: </h3>
+        <ul>
+            <li>Determinants: {{ this.getDet() }}</li>
+        </ul>
+        <br>
+
+        <h3>Eigenvalues: </h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>1</th>
+                <th>2</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><input type="text" name="r1c1" id="eigen" disabled="disabled"></td>
+                <td><input type="text" name="r1c2" id="eigen" disabled="disabled"></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><input type="text" name="r2c1" id="eigen" disabled="disabled"></td>
+                <td><input type="text" name="r2c2" id="eigen" disabled="disabled"></td>
+            </tr>
+            <tr>
+                <td>Eigenvector</td>
+                <td><input type="text" name="r1c1" id="eigen" disabled="disabled"></td>
+                <td><input type="text" name="r1c2" id="eigen" disabled="disabled"></td>
+            </tr>
+        </table>
+
+
+    </div>
+</div>
+
+
