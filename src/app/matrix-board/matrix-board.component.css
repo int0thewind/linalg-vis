@@ -14,7 +14,7 @@ div.board {
 svg.board {
     width: min(80vh, 800px);
     height: min(80vh, 800px);
-    border: 1px grey solid;
+    /* border: 1px red solid; */
 }
 
 div.control {
