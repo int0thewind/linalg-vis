@@ -10,7 +10,7 @@ An web app to visualise 2-dimensional linear transform.
 * (TODO) Show multiple transformed objects. Object including:
     * Vector
     * Circle/Ellipse
-    * Quadrilaterial
+    * Rectangles
     * (challenging) custom SVG with path specified
 * (TODO) Show eigenvalues and corresponding eigenvectors
 * (TODO) Show multiple drawboards, horizontally or vertically based on user's requirement.
