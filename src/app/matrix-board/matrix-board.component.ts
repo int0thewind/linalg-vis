@@ -13,13 +13,15 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
 
   mat = math.matrix([[1, 0], [0, 1]]);
 
-  range = 10;
+  range = 15;
+
+  maxRange = 50;
 
   margin = {top: 20, bottom: 20, right: 20, left: 20};
 
-  xScale: d3.ScaleLinear<number, number> = null;
+  xScale = d3.scaleLinear();
 
-  yScale: d3.ScaleLinear<number, number> = null;
+  yScale = d3.scaleLinear();
 
   listOfShape: Shape[] = [];
 
@@ -30,45 +32,74 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {
+    this.initSVG();
     this.initCoordinate();
     this.initBaseVectors();
   }
 
-  initCoordinate(): void {
+  initSVG(): void {
     const svg = d3.select('svg.board');
     const width = parseInt(svg.style('width'), 10);
     const height = parseInt(svg.style('height'), 10);
+    svg.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', width)
+      .attr('height', height)
+      .style('fill', 'white');
+  }
 
+  initCoordinate(): void {
+    // Main variables
+    const svg = d3.select('svg.board');
+    const width = parseInt(svg.style('width'), 10);
+    const height = parseInt(svg.style('height'), 10);
     // Update global xScale and yScale
-    this.xScale = d3.scaleLinear().domain([-this.range, this.range])
-      .range([this.margin.left, width - this.margin.right]);
-    this.yScale = d3.scaleLinear().domain([-this.range, this.range])
-      .range([height - this.margin.bottom, this.margin.top]);
-
+    this.xScale.domain([-this.range, this.range]).range([this.margin.left, width - this.margin.right]);
+    this.yScale.domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]);
+    // Append two groups of xAxis and yAxis
     const xAxisGroup = svg.append('g').attr('class', 'xAxis').style('transform', `translate(0px, ${height / 2}px)`);
     const yAxisGroup = svg.append('g').attr('class', 'yAxis').style('transform', `translate(${width / 2}px, 0px)`);
     xAxisGroup.call(d3.axisTop(this.xScale));
     yAxisGroup.call(d3.axisLeft(this.yScale));
-
+    // Hide the zero point on the axis
     document.querySelectorAll('g.tick > text').forEach((textElem) => {
       if (textElem.innerHTML === '0') {
-        // Dont know why angular complains about the style property. It is actually work.
-        // textElem.style.visibility = 'hidden';
+        textElem.setAttribute('class', 'zero-tick');
+        textElem.innerHTML = '';
       }
     });
+    // Add the zero point onto the board
+    svg.append('text')
+      .attr('x', this.xScale(0) + 5)
+      .attr('y', this.yScale(0) + 20)
+      .style('font', '20px serif')
+      .html('O');
+    // Attach grid lines
+    const gridLines = svg.append('g').attr('class', 'grid-line');
+    for (let i = -this.range + this.range % 2; i <= this.range; i += 2) {
+      gridLines.append('line')
+        .attr('x1', this.xScale(i))
+        .attr('y1', this.yScale(-this.range))
+        .attr('x2', this.xScale(i))
+        .attr('y2', this.yScale(this.range))
+        .style('stroke', '#cccccc')
+        .style('stroke-dasharray', `${this.maxRange / this.range}`);
+      gridLines.append('line')
+        .attr('x1', this.xScale(-this.range))
+        .attr('y1', this.yScale(i))
+        .attr('x2', this.xScale(this.range))
+        .attr('y2', this.yScale(i))
+        .style('stroke', '#cccccc')
+        .style('stroke-dasharray', `${this.maxRange / this.range}`);
+    }
   }
 
-  removeCoordinate(): void {
-    // Remove the coordinate drawing
+  updateCoordinate(): void {
     const xAxisGroup = document.querySelector('g.xAxis');
     const yAxisGroup = document.querySelector('g.yAxis');
     xAxisGroup.parentNode.removeChild(xAxisGroup);
     yAxisGroup.parentNode.removeChild(yAxisGroup);
-    // We do not reset the xScale and yScale here.
-  }
-
-  updateCoordinate(): void {
-    this.removeCoordinate();
     this.initCoordinate();
   }
 
