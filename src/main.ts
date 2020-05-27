@@ -4,6 +4,9 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
+import { version as d3version } from 'd3';
+import { VERSION as angularVersion } from '@angular/core';
+
 if (environment.production) {
   enableProdMode();
 }
@@ -11,9 +14,13 @@ if (environment.production) {
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
 
-const github = document.querySelector('p.desc#github');
+// Fetch install info
+const version = document.querySelector('p.desc#version');
+version.innerHTML = `Built with <a href='https://d3js.org'>D3.js ${d3version}</a> and <a href='https://angular.io'>Angular ${angularVersion.full}</a>`;
 
 // Fetch GitHub info
+const github = document.querySelector('p.desc#github');
+
 fetch('https://api.github.com/repos/int0thewind/linalg-vis/commits')
   .then(d => d.json())
   .then((req) => {
