@@ -95,14 +95,6 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
     }
   }
 
-  updateCoordinate(): void {
-    const xAxisGroup = document.querySelector('g.xAxis');
-    const yAxisGroup = document.querySelector('g.yAxis');
-    xAxisGroup.parentNode.removeChild(xAxisGroup);
-    yAxisGroup.parentNode.removeChild(yAxisGroup);
-    this.initCoordinate();
-  }
-
   initBaseVectors(): void {
     const xBaseVector = new Vector(this.xBaseVectorId, 'red', 0, 0, this.mat.get([0, 0]), this.mat.get([0, 1]));
     const yBaseVector = new Vector(this.yBaseVectorId, 'blue', 0, 0, this.mat.get([1, 0]), this.mat.get([1, 1]));
@@ -132,13 +124,20 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
     }
   }
 
-  getDet(): number {
+  getMatDet(): number {
     return math.det(this.mat);
+  }
+
+  getMatElem(row: number, column: number): number {
+    return this.mat.get([column, row]);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.range) {
-      this.updateCoordinate();
+
+    }
+    if (changes.mat) {
+
     }
   }
 }
