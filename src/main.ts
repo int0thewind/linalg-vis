@@ -6,6 +6,7 @@ import { environment } from './environments/environment';
 
 import { version as d3version } from 'd3';
 import { VERSION as angularVersion } from '@angular/core';
+import { version as mathjsVersion } from 'mathjs';
 
 if (environment.production) {
   enableProdMode();
@@ -16,7 +17,7 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 
 // Fetch install info
 const version = document.querySelector('p.desc#version');
-version.innerHTML = `Built with <a href='https://d3js.org'>D3.js ${d3version}</a> and <a href='https://angular.io'>Angular ${angularVersion.full}</a>`;
+version.innerHTML = `Built with <a href='https://d3js.org'>D3.js ${d3version}</a>, <a href='https://mathjs.org'>mathJS ${mathjsVersion}</a>, and <a href='https://angular.io'>Angular ${angularVersion.full}</a>`;
 
 // Fetch GitHub info
 const github = document.querySelector('p.desc#github');
