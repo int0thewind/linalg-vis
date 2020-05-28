@@ -2,26 +2,15 @@ import { Shape } from './shape';
 import * as math from 'mathjs';
 import * as d3 from 'd3';
 
-export class Vector implements Shape {
+export class Vector extends Shape {
 
-    class = 'vector';
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
 
-    id: string;
-
-    color = 'red';
-
-    x1 = 0;
-
-    y1 = 0;
-
-    x2 = 1;
-
-    y2 = 1;
-
-    constructor(id: string, color: string, x1?: number, y1?: number, x2?: number, y2?: number) {
-        console.assert(document.getElementById(id) == null, `The id ${id} is already in use.`);
-        this.id = id;
-        this.color = color;
+    constructor(id: string, color: string, x1: number, y1: number, x2: number, y2: number) {
+        super('vector', id, color);
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -51,13 +40,6 @@ export class Vector implements Shape {
                 .attr('r', '5')
                 .style('stroke', this.color)
                 .style('fill', this.color);
-        }
-    }
-
-    remove(): void {
-        if (document.getElementById(this.id)) {
-            const element = document.getElementById(this.id);
-            element.parentNode.removeChild(element);
         }
     }
 }
