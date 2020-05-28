@@ -3,6 +3,9 @@ import * as math from 'mathjs';
 import * as d3 from 'd3';
 import { Shape } from '../shape';
 import { Vector } from '../vector';
+import { Polygon } from '../polygon';
+import { Ellipse } from '../ellipse';
+import { Rectangle } from '../rectangle';
 
 @Component({
   selector: 'app-matrix-board',
@@ -15,9 +18,9 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
 
   range = 15;
 
-  maxRange = 50;
+  readonly maxRange = 50;
 
-  margin = {top: 20, bottom: 20, right: 20, left: 20};
+  readonly margin = {top: 20, bottom: 20, right: 20, left: 20};
 
   xScale = d3.scaleLinear();
 
@@ -25,9 +28,9 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
 
   listOfShape: Shape[] = [];
 
-  xBaseVectorId = 'x-base-vector';
+  readonly xBaseVectorId = 'x-base-vector';
 
-  yBaseVectorId = 'y-base-vector';
+  readonly yBaseVectorId = 'y-base-vector';
 
   constructor() {}
 
