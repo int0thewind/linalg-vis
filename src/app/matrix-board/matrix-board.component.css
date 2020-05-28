@@ -33,10 +33,19 @@ td {
     text-align: center;
 }
 
+th, td {
+    width: 80px;
+}
+
 table {
     border-collapse: collapse;
 }
 
 table, td, th{
     border: 1px grey solid;
+}
+
+input[type=text] {
+    width: 80px;
+    text-align: center;
 }

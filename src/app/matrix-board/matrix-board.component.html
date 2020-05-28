@@ -11,13 +11,13 @@
                 </tr>
                 <tr>
                     <td>1</td>
-                    <td><input type="text" name="r1c1" id="matrix-r1c1"></td>
-                    <td><input type="text" name="r1c2" id="matrix-r1c2"></td>
+                    <td><input type="text" name="r1c1" id="matrix-r1c1" [value]="this.getMatElem(0, 0)"></td>
+                    <td><input type="text" name="r1c2" id="matrix-r1c2" [value]="this.getMatElem(0, 1)"></td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td><input type="text" name="r2c1" id="matrix-r2c1"></td>
-                    <td><input type="text" name="r2c2" id="matrix-r2c2"></td>
+                    <td><input type="text" name="r2c1" id="matrix-r2c1" [value]="this.getMatElem(1, 0)"></td>
+                    <td><input type="text" name="r2c2" id="matrix-r2c2" [value]="this.getMatElem(1, 1)"></td>
                 </tr>
             </table>
         <br>
@@ -34,7 +34,7 @@
 
         <h3>Matrix Info: </h3>
         <ul>
-            <li>Determinants: {{ this.getDet() }}</li>
+            <li>Determinants: {{ this.getMatDet() }}</li>
         </ul>
         <br>
 
