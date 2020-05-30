@@ -1,2 +1,29 @@
+<h1>Linear Algebra Visualisation</h1>
+	<p class='desc'>2-dimensional matrix linear transformation visualiser. <br>
+	This simple webapp allows you to view how a linear transformation transformed,
+		reveal the transformation of multiple objects,
+		and understand linear algebra in a geometric perspective. </p>
+<hr>
+
 <app-matrix-board></app-matrix-board>
+
+<hr>
+<footer>
+    <p class='desc'>
+        Author: Hanzhi Yin <br>
+    </p>
+    <p class="desc">
+        Built with <a href='https://d3js.org'>D3.js {{ d3VersionInfo }}</a>,
+        <a href='https://mathjs.org'>mathJS {{ mathJsVersionInfo }}</a>,
+        and <a href='https://angular.io'>Angular {{ angularVersionInfo }}</a>
+    </p>
+    <p class="desc" *ngIf="githubInfo.isValid else githubFail">
+        Latest commit: <a [href]="githubInfo.link">{{ githubInfo.commit }}</a> on {{ githubInfo.date }}
+    </p>
+
+    <ng-template #githubFail>
+        <p class="desc">Failed to get latest commit info.</p>
+    </ng-template>
+</footer>
+
 <router-outlet></router-outlet>
