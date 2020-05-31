@@ -66,10 +66,7 @@ export abstract class Shape {
      * Calling this function to remove the shape on the coordinate system.
      */
     remove(): void {
-        if (document.getElementById(this.id)) {
-            const elem = document.getElementById(this.id);
-            elem.parentNode.removeChild(elem);
-        }
+        d3.select(`#${this.id}`).remove();
     }
 
     /**
@@ -88,7 +85,7 @@ export class Polygon extends Shape {
 
     constructor(id: string, color: string, points: Point[]) {
         super('polygon', id, color);
-        console.assert(points || points.length >= 2, `Your input points for the polygon ${id} is invalid.`);
+        console.assert(points !== null || points.length >= 2, `Your input points for the polygon ${id} is invalid.`);
         this.points = points;
     }
 
