@@ -35,7 +35,7 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
 
   currentSelectedShape = '';
 
-  currentSelectedShapeType = '';
+  currentSelectedShapeType: 'Vector' | 'Dot' | 'Ellipse' | 'Rectangle' | 'Polygon' = 'Vector';
 
   readonly acceptedShapes = {
     Vector,

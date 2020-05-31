@@ -31,12 +31,32 @@
                 <button (click)='removeShape(currentSelectedShape)'>Delete selected shape</button>
             </div>
             
-            <div>
-                <select type="text" [(ngModel)]="currentSelectedShapeType">
-                    <option *ngFor='let type of objectKeys(acceptedShapes)' [ngValue]="type">{{ type }}</option>
-                </select>
-                <button name="add-object">Add Obejct</button>
+            <select type="text" [(ngModel)]="currentSelectedShapeType">
+                <option *ngFor='let shapeType of objectKeys(acceptedShapes)' [ngValue]="shapeType">{{ shapeType }}</option>
+            </select>
+            <div *ngIf="currentSelectedShapeType === 'Vector'">
+                Vector selected.
             </div>
+            <div *ngIf="currentSelectedShapeType === 'Rectangle'">
+
+            </div>
+            <div *ngIf="currentSelectedShapeType === 'Ellipse'">
+
+            </div>
+            <div *ngIf="currentSelectedShapeType === 'Polygon'">
+                <label for="">Path: </label>
+                <textarea name="" id="path-input" cols="30" rows="10"></textarea>
+            </div>
+            <div *ngIf="currentSelectedShapeType === 'Dot'">
+                
+            </div>
+            <br>
+            <label for="">Shape ID: </label>
+            <input type="text" name="" id="shape-id">
+            <br>
+            <label for="">Color: </label>
+            <input type="text" name="" id="shape-color">
+            <button>Add Shape</button>
         </div>
         <br>
 
