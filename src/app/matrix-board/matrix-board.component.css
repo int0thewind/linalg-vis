@@ -2,7 +2,7 @@
     --length: min(80vh, 800px)
 }
 
-div.board {
+div.matrix-board {
     width: calc(min(80vh, 800px) + 300px);
     height: min(80vh, 800px);
     margin: auto;

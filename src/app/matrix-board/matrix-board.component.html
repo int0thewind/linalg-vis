@@ -1,6 +1,6 @@
-<div class='board'>
+<div class='matrix-board'>
     <svg class='board'></svg>
-    <div class="control">
+    <div class='control'>
 
         <h3>Matrix:</h3>
             <table>
@@ -22,13 +22,21 @@
             </table>
         <br>
         
-        <h3>Objects: </h3>
-        <div class="objects">
-            <select name="object" id="object"></select>
-            <span>
-                <select name="object-select" id="object-select"></select>
+        <h3>Shapes: </h3>
+        <div class="shapes">
+            <div>
+                <select type="text" [(ngModel)]="currentSelectedShape">
+                    <option *ngFor='let shape of listOfShape' [ngValue]="shape.id">{{ shape.id }}</option>
+                </select>
+                <button (click)='removeShape(currentSelectedShape)'>Delete selected shape</button>
+            </div>
+            
+            <div>
+                <select type="text" [(ngModel)]="currentSelectedShapeType">
+                    <option *ngFor='let type of objectKeys(acceptedShapes)' [ngValue]="type">{{ type }}</option>
+                </select>
                 <button name="add-object">Add Obejct</button>
-            </span>
+            </div>
         </div>
         <br>
 
@@ -38,7 +46,7 @@
         </ul>
         <br>
 
-        <h3>Eigenvalues: </h3>
+        <!-- <h3>Eigenvalues: </h3>
         <table>
             <tr>
                 <th></th>
@@ -60,8 +68,7 @@
                 <td><input type="text" name="v1" id="eigen-v1" disabled="disabled"></td>
                 <td><input type="text" name="v2" id="eigen-v2" disabled="disabled"></td>
             </tr>
-        </table>
-
+        </table> -->
 
     </div>
 </div>

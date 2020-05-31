@@ -1,14 +1,15 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import * as math from 'mathjs';
 import * as d3 from 'd3';
-import { Shape, Vector } from '../shape';
+import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon} from '../shape';
 
 @Component({
   selector: 'app-matrix-board',
   templateUrl: './matrix-board.component.html',
-  styleUrls: ['./matrix-board.component.css']
+  styleUrls: ['./matrix-board.component.css'],
 })
 export class MatrixBoardComponent implements OnInit, OnChanges {
+  objectKeys = Object.keys; // alias of object keys to retrive an key of an object;
 
   mat = math.matrix([[1, 0], [0, 1]]);
 
@@ -22,6 +23,8 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
 
   yScale = d3.scaleLinear();
 
+  baseVector: Shape[] = [];
+
   listOfShape: Shape[] = [];
 
   shapeClass = 'shape';
@@ -29,6 +32,18 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
   readonly xBaseVectorId = 'x-base-vector';
 
   readonly yBaseVectorId = 'y-base-vector';
+
+  currentSelectedShape = '';
+
+  currentSelectedShapeType = '';
+
+  readonly acceptedShapes = {
+    Vector,
+    Dot,
+    Ellipse,
+    Rectangle,
+    Polygon,
+  };
 
   constructor() {}
 
@@ -61,22 +76,23 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
     this.yScale.domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]);
     // All the groups under the svg
     const axisGroup = svg.append('g').attr('class', 'axis');
-    const xAxisGroup = axisGroup.append('g').attr('class', 'xAxis').style('transform', `translate(0px, ${height / 2}px)`);
-    const yAxisGroup = axisGroup.append('g').attr('class', 'yAxis').style('transform', `translate(${width / 2}px, 0px)`);
+    const xAxisGroup = axisGroup.append('g').attr('class', 'x-axis').style('transform', `translate(0px, ${height / 2}px)`);
+    const yAxisGroup = axisGroup.append('g').attr('class', 'y-axis').style('transform', `translate(${width / 2}px, 0px)`);
+    const gridLineGroup = axisGroup.append('g').attr('class', 'grid-line');
     // Call scales to append axises.
     xAxisGroup.call(d3.axisTop(this.xScale));
     yAxisGroup.call(d3.axisLeft(this.yScale));
     // Attach grid lines
     const dashArray = this.maxRange / this.range;
     for (let i = -this.range + this.range % 2; i <= this.range; i += 2) {
-      xAxisGroup.append('line')
+      gridLineGroup.append('line')
         .attr('x1', this.xScale(i))
         .attr('y1', this.yScale(-this.range))
         .attr('x2', this.xScale(i))
         .attr('y2', this.yScale(this.range))
         .style('stroke', '#cccccc')
         .style('stroke-dasharray', dashArray);
-      yAxisGroup.append('line')
+      gridLineGroup.append('line')
         .attr('x1', this.xScale(-this.range))
         .attr('y1', this.yScale(i))
         .attr('x2', this.xScale(this.range))
@@ -101,8 +117,8 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
   initBaseVectors(): void {
     const xBaseVector = new Vector(this.xBaseVectorId, 'red', 0, 0, 1, 0);
     const yBaseVector = new Vector(this.yBaseVectorId, 'blue', 0, 0, 0, 1);
-    this.listOfShape.push(xBaseVector);
-    this.listOfShape.push(yBaseVector);
+    this.baseVector.push(xBaseVector);
+    this.baseVector.push(yBaseVector);
     this.renderShapes();
   }
 
@@ -112,6 +128,7 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
   }
 
   removeShape(id: string): void {
+    console.log(`%cremoveshape called! ${id} passed in`, 'color: green');
     this.listOfShape = this.listOfShape.filter((shape) => {
       if (shape.id === id) {
         shape.remove();
@@ -122,9 +139,8 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
 
   renderShapes(): void {
     const svg = d3.select('svg.board');
-    for (const shape of this.listOfShape) {
-      shape.render(svg, this.mat, this.xScale, this.yScale);
-    }
+    this.baseVector.forEach(vector => vector.render(svg, this.mat, this.xScale, this.yScale));
+    this.listOfShape.forEach(elem => elem.render(svg, this.mat, this.xScale, this.yScale));
   }
 
   getMatDet(): number {
@@ -136,6 +152,6 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(`Property changed!\n${changes}.`);
+    console.log(`%cProperty changed!\n${changes}`, 'color: green');
   }
 }
