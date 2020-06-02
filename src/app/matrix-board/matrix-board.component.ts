@@ -1,56 +1,65 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import * as math from 'mathjs';
+import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Matrix, det } from 'mathjs';
 import * as d3 from 'd3';
-import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon} from '../shape';
+import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
+import { MatrixBoardDataService } from '../matrix-board-data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-matrix-board',
   templateUrl: './matrix-board.component.html',
   styleUrls: ['./matrix-board.component.css'],
 })
-export class MatrixBoardComponent implements OnInit, OnChanges {
+export class MatrixBoardComponent implements OnInit, OnChanges, OnDestroy {
+
   objectKeys = Object.keys; // alias of object keys to retrieve an key of an object;
-
-  mat = math.matrix([[1, 0], [0, 1]]);
-
-  range = 15;
 
   readonly maxRange = 50;
 
   readonly margin = {top: 20, bottom: 20, right: 20, left: 20};
 
+  readonly shapeClass = 'shape';
+
+  range = 15;
+
   xScale = d3.scaleLinear();
 
   yScale = d3.scaleLinear();
 
-  baseVector: Shape[] = [];
+  baseVectors = [
+    new Vector('x-base-vector', 'red',  0, 0, 1, 0),
+    new Vector('y-base-vector', 'blue', 0, 0, 0, 1),
+  ];
 
   listOfShape: Shape[] = [];
 
-  shapeClass = 'shape';
+  shapesSubscription: Subscription;
 
-  readonly xBaseVectorId = 'x-base-vector';
+  matrix: Matrix;
 
-  readonly yBaseVectorId = 'y-base-vector';
+  matrixSubscription: Subscription;
 
-  currentSelectedShape = '';
+  constructor(private data: MatrixBoardDataService) {}
 
-  currentSelectedShapeType: 'Vector' | 'Dot' | 'Ellipse' | 'Rectangle' | 'Polygon' = 'Vector';
-
-  readonly acceptedShapes = {
-    Vector,
-    Dot,
-    Ellipse,
-    Rectangle,
-    Polygon,
-  };
-
-  constructor() {}
+  ngOnDestroy(): void {
+    this.destroyDataSubscribe();
+  }
 
   ngOnInit(): void {
     this.initSVG();
     this.initCoordinate();
-    this.initBaseVectors();
+    this.renderShapes();
+  }
+
+  initDataSubscribe(): void {
+    // FIXME: cannot set initial values of matrix!
+    this.matrixSubscription = this.data.matrixSource.subscribe(matrix => this.matrix = matrix);
+    this.shapesSubscription = this.data.shapesSource.subscribe(listOfShape => this.listOfShape = listOfShape);
+  }
+
+  destroyDataSubscribe(): void {
+    this.matrixSubscription.unsubscribe();
+    this.shapesSubscription.unsubscribe();
   }
 
   initSVG(): void {
@@ -114,19 +123,6 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
       .style('fill', 'black');
   }
 
-  initBaseVectors(): void {
-    const xBaseVector = new Vector(this.xBaseVectorId, 'red', 0, 0, 1, 0);
-    const yBaseVector = new Vector(this.yBaseVectorId, 'blue', 0, 0, 0, 1);
-    this.baseVector.push(xBaseVector);
-    this.baseVector.push(yBaseVector);
-    this.renderShapes();
-  }
-
-  removeBaseVectors(): void {
-    this.removeShape(this.xBaseVectorId);
-    this.removeShape(this.yBaseVectorId);
-  }
-
   removeShape(id: string): void {
     console.log(`%cremoveshape called! ${id} passed in`, 'color: green');
     this.listOfShape = this.listOfShape.filter((shape) => {
@@ -139,16 +135,8 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
 
   renderShapes(): void {
     const svg = d3.select('svg.board');
-    this.baseVector.forEach(vector => vector.render(svg, this.mat, this.xScale, this.yScale));
-    this.listOfShape.forEach(elem => elem.render(svg, this.mat, this.xScale, this.yScale));
-  }
-
-  getMatDet(): number {
-    return math.det(this.mat);
-  }
-
-  getMatElem(row: number, column: number): number {
-    return this.mat.get([column, row]);
+    this.baseVectors.forEach(vector => vector.render(svg, this.matrix, this.xScale, this.yScale));
+    this.listOfShape.forEach(elem => elem.render(svg, this.matrix, this.xScale, this.yScale));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
