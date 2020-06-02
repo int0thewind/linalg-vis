@@ -1,0 +1,4 @@
+div.matrix-board {
+    display: flex;
+    justify-content: center;
+}
