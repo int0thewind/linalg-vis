@@ -45,7 +45,7 @@ export abstract class Shape {
      * @param id the html id attribute to be applied onto the SVG group html tag. The id must be unique.
      * @param color the color of the shape
      */
-    constructor(cls: string, id: string, color: string) {
+    protected constructor(cls: string, id: string, color: string) {
         console.assert(!document.getElementById(id), `The id "${id}" is already in use.`);
         this.class = cls;
         this.id = id;
@@ -85,7 +85,7 @@ export class Polygon extends Shape {
 
     constructor(id: string, color: string, points: Point[]) {
         super('polygon', id, color);
-        console.assert(points !== null || points.length >= 2, `Your input points for the polygon ${id} is invalid.`);
+        console.assert(points !== null && points.length >= 2, `Your input points for the polygon ${id} is invalid.`);
         this.points = points;
     }
 
@@ -93,6 +93,7 @@ export class Polygon extends Shape {
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
         if (!document.getElementById(this.id)) {
             const pointsString = this.getPointsString(matrix, xScale, yScale);
+            console.log(`%c ${pointsString}`, `color: orange`);
             const polyGroup = target.append('g')
                 .attr('class', this.class)
                 .attr('id', this.id);

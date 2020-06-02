@@ -9,7 +9,7 @@ import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon} from '../shape';
   styleUrls: ['./matrix-board.component.css'],
 })
 export class MatrixBoardComponent implements OnInit, OnChanges {
-  objectKeys = Object.keys; // alias of object keys to retrive an key of an object;
+  objectKeys = Object.keys; // alias of object keys to retrieve an key of an object;
 
   mat = math.matrix([[1, 0], [0, 1]]);
 
