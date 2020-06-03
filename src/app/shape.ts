@@ -56,6 +56,7 @@ export abstract class Shape {
      * Calling this function to render the shape to the target.
      * @see d3.Selection
      * @param target the target place to render shape onto it.
+     * @param matrix use the matrix to get the relative coordinate of the shape
      * @param xScale the xScale to transform relative coordinate to absolute position
      * @param yScale the yScale to transform relative coordinate to absolute position
      */
@@ -91,16 +92,14 @@ export class Polygon extends Shape {
 
     render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
-        if (!document.getElementById(this.id)) {
-            const pointsString = this.getPointsString(matrix, xScale, yScale);
-            console.log(`%c ${pointsString}`, `color: orange`);
-            const polyGroup = target.append('g')
-                .attr('class', this.class)
-                .attr('id', this.id);
-            polyGroup.append('polygon')
-                .attr('points', pointsString)
-                .style('fill', this.color);
-        }
+        const pointsString = this.getPointsString(matrix, xScale, yScale);
+        console.log(`%c ${pointsString}`, `color: orange`);
+        const polyGroup = target.append('g')
+            .attr('class', this.class)
+            .attr('id', this.id);
+        polyGroup.append('polygon')
+            .attr('points', pointsString)
+            .style('fill', this.color);
     }
 
     getPointsString(matrix: math.Matrix, xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): string {
@@ -137,22 +136,20 @@ export class Ellipse extends Shape {
 
     render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
-            if (!document.getElementById(this.id)) {
-                const det = math.det(matrix);
-                const rxn = this.rx * det;
-                const ryn = this.ry * det;
-                const p = math.multiply(matrix, [this.cx, this.cy]).toArray();
+            const det = math.det(matrix);
+            const rxn = this.rx * det;
+            const ryn = this.ry * det;
+            const p = math.multiply(matrix, [this.cx, this.cy]).toArray();
 
-                const ellipseGroup = target.append('g')
-                    .attr('class', this.class)
-                    .attr('id', this.id);
-                ellipseGroup.append('ellipse')
-                    .attr('cx', xScale(p[0]))
-                    .attr('cy', yScale(p[1]))
-                    .attr('rx', rxn)
-                    .attr('ry', ryn)
-                    .style('fill', this.color);
-            }
+            const ellipseGroup = target.append('g')
+                .attr('class', this.class)
+                .attr('id', this.id);
+            ellipseGroup.append('ellipse')
+                .attr('cx', xScale(p[0]))
+                .attr('cy', yScale(p[1]))
+                .attr('rx', rxn)
+                .attr('ry', ryn)
+                .style('fill', this.color);
     }
 }
 
@@ -162,17 +159,15 @@ export class Dot extends Shape {
     }
     render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
-        if (!document.getElementById(this.id)) {
-            const p = math.multiply(matrix, [this.x, this.y]).toArray();
-            const dotGroup = target.append('g')
-                .attr('class', this.class)
-                .attr('id', this.id);
-            dotGroup.append('circle')
-                .attr('cx', xScale(p[0]))
-                .attr('cy', yScale(p[1]))
-                .attr('r', 3)
-                .style('fill', this.color);
-        }
+        const p = math.multiply(matrix, [this.x, this.y]).toArray();
+        const dotGroup = target.append('g')
+            .attr('class', this.class)
+            .attr('id', this.id);
+        dotGroup.append('circle')
+            .attr('cx', xScale(p[0]))
+            .attr('cy', yScale(p[1]))
+            .attr('r', 3)
+            .style('fill', this.color);
     }
 }
 
@@ -192,26 +187,24 @@ export class Vector extends Shape {
 
     render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void{
-        if (!document.getElementById(this.id)) {
-            const vectorGroup = target.append('g')
-                .attr('class', this.class)
-                .attr('id', this.id);
+        const vectorGroup = target.append('g')
+            .attr('class', this.class)
+            .attr('id', this.id);
 
-            const p1 = math.multiply(matrix, [this.x1, this.y1]).toArray();
-            const p2 = math.multiply(matrix, [this.x2, this.y2]).toArray();
-            vectorGroup.append('line')
-                .attr('x1', xScale(p1[0]))
-                .attr('y1', yScale(p1[1]))
-                .attr('x2', xScale(p2[0]))
-                .attr('y2', yScale(p2[1]))
-                .style('stroke', this.color)
-                .style('stroke-width', 2);
-            vectorGroup.append('circle')
-                .attr('cx', xScale(p2[0]))
-                .attr('cy', yScale(p2[1]))
-                .attr('r', 3)
-                .style('stroke', this.color)
-                .style('fill', this.color);
-        }
+        const p1 = math.multiply(matrix, [this.x1, this.y1]).toArray();
+        const p2 = math.multiply(matrix, [this.x2, this.y2]).toArray();
+        vectorGroup.append('line')
+            .attr('x1', xScale(p1[0]))
+            .attr('y1', yScale(p1[1]))
+            .attr('x2', xScale(p2[0]))
+            .attr('y2', yScale(p2[1]))
+            .style('stroke', this.color)
+            .style('stroke-width', 2);
+        vectorGroup.append('circle')
+            .attr('cx', xScale(p2[0]))
+            .attr('cy', yScale(p2[1]))
+            .attr('r', 3)
+            .style('stroke', this.color)
+            .style('fill', this.color);
     }
 }

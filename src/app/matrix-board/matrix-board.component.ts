@@ -36,7 +36,6 @@ export class MatrixBoardComponent implements OnInit {
     this.initDataSubscribe();
     this.initSVG();
     this.initCoordinate();
-    this.initBaseVectors();
     this.renderShapes();
   }
 
@@ -67,6 +66,7 @@ export class MatrixBoardComponent implements OnInit {
     const width = parseInt(svg.style('width'), 10);
     const height = parseInt(svg.style('height'), 10);
     svg.append('rect')
+      .attr('id', 'canvas-background')
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
@@ -92,6 +92,7 @@ export class MatrixBoardComponent implements OnInit {
     const xAxisGroup = axisGroup.append('g').attr('class', 'x-axis').style('transform', `translate(0px, ${height / 2}px)`);
     const yAxisGroup = axisGroup.append('g').attr('class', 'y-axis').style('transform', `translate(${width / 2}px, 0px)`);
     const gridLineGroup = axisGroup.append('g').attr('class', 'grid-line');
+    const baseVectorGroup = axisGroup.append('g').attr('class', 'base-vector');
     // Call scales to append axises.
     xAxisGroup.call(d3.axisTop(this.xScale));
     yAxisGroup.call(d3.axisLeft(this.yScale));
@@ -113,6 +114,13 @@ export class MatrixBoardComponent implements OnInit {
         .style('stroke', '#cccccc')
         .style('stroke-dasharray', dashArray);
     }
+    // Init base vectors
+    this.baseVectors.forEach((vector) => {
+      if (document.getElementById(vector.id)) {
+        vector.remove();
+      }
+      vector.render(baseVectorGroup, this.matrix, this.xScale, this.yScale);
+    });
     // Modify zero points
     document.querySelectorAll('g.tick > text').forEach((textElem) => {
       if (textElem.innerHTML === '0') {
@@ -127,16 +135,15 @@ export class MatrixBoardComponent implements OnInit {
       .style('fill', 'black');
   }
 
-  initBaseVectors(): void {
-    console.log('Matrix Board: rendering base vectors!');
-    const target = d3.select('g.axis').append('g').attr('class', 'base-vector');
-    this.baseVectors.forEach(vector => vector.render(target, this.matrix, this.xScale, this.yScale));
-  }
-
   renderShapes(): void {
     console.log('Matrix Board: rendering shapes!');
     const target = d3.select('g.shape');
-    this.shapeList.forEach(elem => elem.render(target, this.matrix, this.xScale, this.yScale));
+    this.shapeList.forEach((elem) => {
+      if (document.getElementById(elem.id)) {
+        elem.remove();
+      }
+      elem.render(target, this.matrix, this.xScale, this.yScale);
+    });
   }
 
   removeShape(id: string): void {
