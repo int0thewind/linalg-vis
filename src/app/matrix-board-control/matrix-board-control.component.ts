@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
 import { Matrix, det, eigs, matrix } from 'mathjs';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
+import * as d3 from 'd3';
 
 export type shapeStr = 'Vector' | 'Dot' | 'Ellipse' | 'Rectangle' | 'Polygon';
 
@@ -28,6 +29,10 @@ export class MatrixBoardControlComponent implements OnInit {
     Polygon,
   };
 
+  xScale = d3.scaleLinear();
+
+  yScale = d3.scaleLinear();
+
   constructor(private data: MatrixBoardDataService) { }
 
   ngOnInit(): void {
@@ -43,6 +48,16 @@ export class MatrixBoardControlComponent implements OnInit {
     this.data.shapesSource.subscribe((newListOfShape) => {
       console.log('Matrix Board Control: receives new shape list');
       this.shapeList = newListOfShape;
+    });
+    this.data.xScaleSource.subscribe((newXScale) => {
+      console.log('Matrix Board Control: receives new x Scale');
+      this.xScale = newXScale;
+      // TODO! What to do after getting new x scale?
+    });
+    this.data.yScaleSource.subscribe((newYScale) => {
+      console.log('Matrix Board Control: receives new y Scale');
+      this.yScale = newYScale;
+      // TODO! What to do after getting new y scale?
     });
   }
 

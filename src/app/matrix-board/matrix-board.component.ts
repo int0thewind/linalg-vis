@@ -15,16 +15,16 @@ export class MatrixBoardComponent implements OnInit {
 
   readonly margin = {top: 20, bottom: 20, right: 20, left: 20};
 
-  range = 15;
-
-  xScale = d3.scaleLinear();
-
-  yScale = d3.scaleLinear();
-
-  baseVectors = [
+  readonly baseVectors = [
     new Vector('x-base-vector', 'red',  0, 0, 1, 0),
     new Vector('y-base-vector', 'blue', 0, 0, 0, 1),
   ];
+
+  range = 15;
+
+  xScale: d3.ScaleLinear<number, number>;
+
+  yScale: d3.ScaleLinear<number, number>;
 
   shapeList: Shape[];
 
@@ -50,6 +50,16 @@ export class MatrixBoardComponent implements OnInit {
       this.shapeList = newListOfShape;
       this.renderShapes();
     });
+    this.data.xScaleSource.subscribe((newXScale) => {
+      console.log('Matrix Board: receives new x Scale');
+      this.xScale = newXScale;
+      // TODO! What to do after getting new x scale?
+    });
+    this.data.yScaleSource.subscribe((newYScale) => {
+      console.log('Matrix Board: receives new y Scale');
+      this.yScale = newYScale;
+      // TODO! What to do after getting new y scale?
+    });
   }
 
   initSVG(): void {
@@ -71,8 +81,12 @@ export class MatrixBoardComponent implements OnInit {
     const width = parseInt(svg.style('width'), 10);
     const height = parseInt(svg.style('height'), 10);
     // Update global xScale and yScale
-    this.xScale.domain([-this.range, this.range]).range([this.margin.left, width - this.margin.right]);
-    this.yScale.domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]);
+    // Observables are so great!
+    // I thought I can never get the new xScale and yScale before rendering the shape, but it just works!
+    // this.xScale.domain([-this.range, this.range]).range([this.margin.left, width - this.margin.right]);
+    // this.yScale.domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]);
+    this.data.setXScale(d3.scaleLinear().domain([-this.range, this.range]).range([this.margin.left, width - this.margin.right]));
+    this.data.setYScale(d3.scaleLinear().domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]));
     // All the groups under the svg
     const axisGroup = svg.append('g').attr('class', 'axis');
     const xAxisGroup = axisGroup.append('g').attr('class', 'x-axis').style('transform', `translate(0px, ${height / 2}px)`);
@@ -114,11 +128,13 @@ export class MatrixBoardComponent implements OnInit {
   }
 
   initBaseVectors(): void {
+    console.log('Matrix Board: rendering base vectors!');
     const target = d3.select('g.axis').append('g').attr('class', 'base-vector');
     this.baseVectors.forEach(vector => vector.render(target, this.matrix, this.xScale, this.yScale));
   }
 
   renderShapes(): void {
+    console.log('Matrix Board: rendering shapes!');
     const target = d3.select('g.shape');
     this.shapeList.forEach(elem => elem.render(target, this.matrix, this.xScale, this.yScale));
   }
