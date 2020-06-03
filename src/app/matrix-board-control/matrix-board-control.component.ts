@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
-import { Matrix, det } from 'mathjs';
+import { Matrix, det, eigs } from 'mathjs';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class MatrixBoardControlComponent implements OnInit {
 
   matrix: Matrix;
 
-  listOfShape: Shape[] = [];
+  listOfShape: Shape[];
 
   currentSelectedShape = '';
 
@@ -30,6 +30,7 @@ export class MatrixBoardControlComponent implements OnInit {
 
   ngOnInit(): void {
     this.initDataSubscribe();
+    this.getMatEigs();
   }
 
   initDataSubscribe(): void {
@@ -43,6 +44,10 @@ export class MatrixBoardControlComponent implements OnInit {
 
   getMatElem(row: number, column: number): number {
     return this.matrix.get([column, row]);
+  }
+
+  getMatEigs() {
+    return eigs(this.matrix);
   }
 
 }
