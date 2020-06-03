@@ -34,7 +34,6 @@ export class MatrixBoardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initDataSubscribe();
-    this.initSVG();
     this.initCoordinate();
     this.renderShapes();
   }
@@ -61,20 +60,6 @@ export class MatrixBoardComponent implements OnInit {
     });
   }
 
-  initSVG(): void {
-    const svg = d3.select('svg.board');
-    const width = parseInt(svg.style('width'), 10);
-    const height = parseInt(svg.style('height'), 10);
-    svg.append('rect')
-      .attr('id', 'canvas-background')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', width)
-      .attr('height', height)
-      .style('fill', 'white');
-    svg.append('g').attr('class', 'shape');
-  }
-
   initCoordinate(): void {
     // Main variables
     const svg = d3.select('svg.board');
@@ -88,7 +73,7 @@ export class MatrixBoardComponent implements OnInit {
     this.data.setXScale(d3.scaleLinear().domain([-this.range, this.range]).range([this.margin.left, width - this.margin.right]));
     this.data.setYScale(d3.scaleLinear().domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]));
     // All the groups under the svg
-    const axisGroup = svg.append('g').attr('class', 'axis');
+    const axisGroup = d3.select('g.axis');
     const xAxisGroup = axisGroup.append('g').attr('class', 'x-axis').style('transform', `translate(0px, ${height / 2}px)`);
     const yAxisGroup = axisGroup.append('g').attr('class', 'y-axis').style('transform', `translate(${width / 2}px, 0px)`);
     const gridLineGroup = axisGroup.append('g').attr('class', 'grid-line');
