@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Matrix, matrix } from 'mathjs';
 import { Shape } from './shape';
 
@@ -16,7 +16,6 @@ export class MatrixBoardDataService {
   public shapesSource = this.shapesSubject.asObservable();
 
   setMatrix(newMatrix: Matrix): void {
-    console.assert(newMatrix !== null && newMatrix.size() === [2, 2]);
     this.matrixSubject.next(newMatrix);
   }
 

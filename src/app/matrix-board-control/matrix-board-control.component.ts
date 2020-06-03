@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
-import { Matrix, det, eigs } from 'mathjs';
+import { Matrix, det, eigs, matrix } from 'mathjs';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
+
+export type shapeStr = 'Vector' | 'Dot' | 'Ellipse' | 'Rectangle' | 'Polygon';
 
 @Component({
   selector: 'app-matrix-board-control',
@@ -10,13 +12,13 @@ import { MatrixBoardDataService } from '../matrix-board-data.service';
 })
 export class MatrixBoardControlComponent implements OnInit {
 
+  objectKeys = Object.keys; // alias of object keys to retrieve an key of an object;
+
   matrix: Matrix;
 
-  listOfShape: Shape[];
+  shapeList: Shape[];
 
-  currentSelectedShape = '';
-
-  currentSelectedShapeType: 'Vector' | 'Dot' | 'Ellipse' | 'Rectangle' | 'Polygon' = 'Vector';
+  currType: shapeStr = 'Vector';
 
   readonly acceptedShapes = {
     Vector,
@@ -34,8 +36,14 @@ export class MatrixBoardControlComponent implements OnInit {
   }
 
   initDataSubscribe(): void {
-    this.data.matrixSource.subscribe(matrix => this.matrix = matrix);
-    this.data.shapesSource.subscribe(listOfShape => this.listOfShape = listOfShape);
+    this.data.matrixSource.subscribe((newMatrix) => {
+      console.log('Matrix Board Control: receives new matrix data');
+      this.matrix = newMatrix;
+    });
+    this.data.shapesSource.subscribe((newListOfShape) => {
+      console.log('Matrix Board Control: receives new shape list');
+      this.shapeList = newListOfShape;
+    });
   }
 
   getMatDet(): number {
@@ -48,6 +56,14 @@ export class MatrixBoardControlComponent implements OnInit {
 
   getMatEigs() {
     return eigs(this.matrix);
+  }
+
+  updateMatrix(r1c1: any, r1c2: any, r2c1: any, r2c2: any) {
+    const mat = matrix([[parseFloat(r1c1), parseFloat(r1c2)],
+                        [parseFloat(r2c1), parseFloat(r2c2)]]);
+    console.log(mat);
+    console.log(mat.size());
+    this.data.setMatrix(mat);
   }
 
 }

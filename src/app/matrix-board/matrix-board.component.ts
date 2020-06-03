@@ -1,24 +1,19 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Matrix, det } from 'mathjs';
+import { Component, OnInit } from '@angular/core';
+import { Matrix } from 'mathjs';
 import * as d3 from 'd3';
 import { Shape, Vector } from '../shape';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-matrix-board',
   templateUrl: './matrix-board.component.html',
   styleUrls: ['./matrix-board.component.css'],
 })
-export class MatrixBoardComponent implements OnInit, OnChanges {
-
-  objectKeys = Object.keys; // alias of object keys to retrieve an key of an object;
+export class MatrixBoardComponent implements OnInit {
 
   readonly maxRange = 50;
 
   readonly margin = {top: 20, bottom: 20, right: 20, left: 20};
-
-  readonly shapeClass = 'shape';
 
   range = 15;
 
@@ -31,9 +26,7 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
     new Vector('y-base-vector', 'blue', 0, 0, 0, 1),
   ];
 
-  listOfShape: Shape[] = [];
-
-  shapesSubscription: Subscription;
+  shapeList: Shape[];
 
   matrix: Matrix;
 
@@ -43,12 +36,20 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
     this.initDataSubscribe();
     this.initSVG();
     this.initCoordinate();
+    this.initBaseVectors();
     this.renderShapes();
   }
 
   initDataSubscribe(): void {
-    this.data.matrixSource.subscribe(matrix => this.matrix = matrix);
-    this.data.shapesSource.subscribe(listOfShape => this.listOfShape = listOfShape);
+    this.data.matrixSource.subscribe((newMatrix) => {
+      console.log('Matrix Board: receives new matrix data');
+      this.matrix = newMatrix;
+    });
+    this.data.shapesSource.subscribe((newListOfShape) => {
+      console.log('Matrix Board: receives new shape list');
+      this.shapeList = newListOfShape;
+      this.renderShapes();
+    });
   }
 
   initSVG(): void {
@@ -61,7 +62,7 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
       .attr('width', width)
       .attr('height', height)
       .style('fill', 'white');
-    svg.append('g').attr('class', this.shapeClass);
+    svg.append('g').attr('class', 'shape');
   }
 
   initCoordinate(): void {
@@ -112,23 +113,25 @@ export class MatrixBoardComponent implements OnInit, OnChanges {
       .style('fill', 'black');
   }
 
-  removeShape(id: string): void {
-    console.log(`%cremoveshape called! ${id} passed in`, 'color: green');
-    this.listOfShape = this.listOfShape.filter((shape) => {
-      if (shape.id === id) {
-        shape.remove();
-      }
-      return shape.id !== id;
-    });
+  initBaseVectors(): void {
+    const target = d3.select('g.axis').append('g').attr('class', 'base-vector');
+    this.baseVectors.forEach(vector => vector.render(target, this.matrix, this.xScale, this.yScale));
   }
 
   renderShapes(): void {
-    const svg = d3.select('svg.board');
-    this.baseVectors.forEach(vector => vector.render(svg, this.matrix, this.xScale, this.yScale));
-    this.listOfShape.forEach(elem => elem.render(svg, this.matrix, this.xScale, this.yScale));
+    const target = d3.select('g.shape');
+    this.shapeList.forEach(elem => elem.render(target, this.matrix, this.xScale, this.yScale));
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(`%cProperty changed!\n${changes}`, 'color: green');
+  removeShape(id: string): void {
+    console.log(`%c remove shape called! ${id} passed in`, 'color: green');
+    this.data.setShapes(
+      this.shapeList.filter((shape) => {
+        if (shape.id === id) {
+          shape.remove();
+        }
+        return shape.id !== id;
+      })
+    );
   }
 }
