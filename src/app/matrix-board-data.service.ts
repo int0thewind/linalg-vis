@@ -11,13 +11,9 @@ export class MatrixBoardDataService {
 
   private shapesSubject = new BehaviorSubject<Shape[]>([]);
 
-  get matrixSource() {
-    return this.matrixSubject.asObservable();
-  }
+  public matrixSource = this.matrixSubject.asObservable();
 
-  get shapesSource() {
-    return this.shapesSubject.asObservable();
-  }
+  public shapesSource = this.shapesSubject.asObservable();
 
   setMatrix(newMatrix: Matrix): void {
     console.assert(newMatrix !== null && newMatrix.size() === [2, 2]);

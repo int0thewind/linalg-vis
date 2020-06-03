@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
 import { Matrix, det } from 'mathjs';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
@@ -8,7 +8,7 @@ import { MatrixBoardDataService } from '../matrix-board-data.service';
   templateUrl: './matrix-board-control.component.html',
   styleUrls: ['./matrix-board-control.component.css']
 })
-export class MatrixBoardControlComponent implements OnInit, OnDestroy {
+export class MatrixBoardControlComponent implements OnInit {
 
   matrix: Matrix;
 
@@ -28,10 +28,6 @@ export class MatrixBoardControlComponent implements OnInit, OnDestroy {
 
   constructor(private data: MatrixBoardDataService) { }
 
-  ngOnDestroy(): void {
-    this.destroyDataSubscribe();
-  }
-
   ngOnInit(): void {
     this.initDataSubscribe();
   }
@@ -39,11 +35,6 @@ export class MatrixBoardControlComponent implements OnInit, OnDestroy {
   initDataSubscribe(): void {
     this.data.matrixSource.subscribe(matrix => this.matrix = matrix);
     this.data.shapesSource.subscribe(listOfShape => this.listOfShape = listOfShape);
-  }
-
-  destroyDataSubscribe(): void {
-    // this.data.matrixSource.unsubscribe();
-    // this.data.shapesSource.unsubscribe();
   }
 
   getMatDet(): number {

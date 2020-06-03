@@ -1,7 +1,7 @@
-import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Matrix, det } from 'mathjs';
 import * as d3 from 'd3';
-import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
+import { Shape, Vector } from '../shape';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
 import { Subscription } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './matrix-board.component.html',
   styleUrls: ['./matrix-board.component.css'],
 })
-export class MatrixBoardComponent implements OnInit, OnChanges, OnDestroy {
+export class MatrixBoardComponent implements OnInit, OnChanges {
 
   objectKeys = Object.keys; // alias of object keys to retrieve an key of an object;
 
@@ -37,29 +37,18 @@ export class MatrixBoardComponent implements OnInit, OnChanges, OnDestroy {
 
   matrix: Matrix;
 
-  matrixSubscription: Subscription;
-
   constructor(private data: MatrixBoardDataService) {}
 
-  ngOnDestroy(): void {
-    this.destroyDataSubscribe();
-  }
-
   ngOnInit(): void {
+    this.initDataSubscribe();
     this.initSVG();
     this.initCoordinate();
     this.renderShapes();
   }
 
   initDataSubscribe(): void {
-    // FIXME: cannot set initial values of matrix!
-    this.matrixSubscription = this.data.matrixSource.subscribe(matrix => this.matrix = matrix);
-    this.shapesSubscription = this.data.shapesSource.subscribe(listOfShape => this.listOfShape = listOfShape);
-  }
-
-  destroyDataSubscribe(): void {
-    this.matrixSubscription.unsubscribe();
-    this.shapesSubscription.unsubscribe();
+    this.data.matrixSource.subscribe(matrix => this.matrix = matrix);
+    this.data.shapesSource.subscribe(listOfShape => this.listOfShape = listOfShape);
   }
 
   initSVG(): void {
