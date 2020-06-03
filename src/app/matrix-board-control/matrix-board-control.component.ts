@@ -62,22 +62,24 @@ export class MatrixBoardControlComponent implements OnInit {
   }
 
   getMatDet(): number {
+    console.log('Matrix Board Control: getting matrix determinant');
     return det(this.matrix);
   }
 
   getMatElem(row: number, column: number): number {
+    console.log(`Matrix Board Control: getting matrix row ${row} and column ${column}`);
     return this.matrix.get([column, row]);
   }
 
   getMatEigs() {
+    console.log('Matrix Board Control: getting matrix eigen info');
     return eigs(this.matrix);
   }
 
   updateMatrix(r1c1: any, r1c2: any, r2c1: any, r2c2: any) {
-    const mat = matrix([[parseFloat(r1c1), parseFloat(r1c2)],
-                        [parseFloat(r2c1), parseFloat(r2c2)]]);
-    console.log(mat);
-    console.log(mat.size());
+    console.log('Matrix Board Control: updating matrix');
+    const mat = matrix([[parseFloat(r1c1), parseFloat(r2c1)],
+                        [parseFloat(r1c2), parseFloat(r2c2)]]);
     this.data.setMatrix(mat);
   }
 
