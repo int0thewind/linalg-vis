@@ -132,6 +132,7 @@ export class MatrixBoardComponent implements OnInit {
    * This function can also update the base vectors when the base vectors are already rendered.
    */
   initOrUpdateBaseVectors(): void {
+    console.log('Matrix Board: rendering base vectors!');
     const baseVectorGroup = d3.select('g.base-vector');
     this.baseVectors.forEach((vector) => {
       if (document.getElementById(vector.id)) {

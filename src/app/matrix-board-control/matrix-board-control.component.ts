@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
-import { Matrix, det, eigs, matrix } from 'mathjs';
+import { Matrix, det, eigs, matrix, zeros } from 'mathjs';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
 import * as d3 from 'd3';
 
@@ -50,6 +50,17 @@ export class MatrixBoardControlComponent implements OnInit {
   getMatDet(): number {
     console.log('Matrix Board Control: getting matrix determinant');
     return det(this.matrix);
+  }
+
+  getMatRank(): number {
+    console.log('Matrix Board Control: getting matrix rank');
+    if (this.getMatDet() !== 0) {
+      return 2;
+    }
+    if (this.matrix.toArray().toString() === '0,0,0,0') {
+      return 0;
+    }
+    return 1;
   }
 
   getMatElem(row: number, column: number): number {
