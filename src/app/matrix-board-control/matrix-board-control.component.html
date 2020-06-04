@@ -1,4 +1,8 @@
 <h3>Matrix:</h3>
+    <ul>
+        <li>Determinants: {{ this.getMatDet() }}</li>
+        <li>Rank: </li>
+    </ul>
     <table>
         <tr>
             <th></th>
@@ -23,7 +27,7 @@
 
 <h3>Shapes: </h3>
     <select type="text" [(ngModel)]="currType">
-        <option *ngFor='let shapeType of objectKeys(acceptedShapes)' [ngValue]="shapeType">{{ shapeType }}</option>
+        <option *ngFor='let shapeType of acceptedShapes' [ngValue]="shapeType">{{ shapeType }}</option>
     </select>
     <div *ngIf="currType === 'Vector'">
         Vector selected.
@@ -45,36 +49,3 @@
         Dot selected
         <button>Add Shape</button>
     </div>
-
-<br>
-
-<h3>Matrix Info: </h3>
-<ul>
-    <li>Determinants: {{ this.getMatDet() }}</li>
-</ul>
-
-<br>
-
-<!-- <h3>Eigenvalues: </h3>
-<table>
-    <tr>
-        <th></th>
-        <th>1</th>
-        <th>2</th>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td><input type="text" name="r1c1" id="eigen-r1c1" disabled="disabled"></td>
-        <td><input type="text" name="r1c2" id="eigen-r1c2" disabled="disabled"></td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td><input type="text" name="r2c1" id="eigen-r2c1" disabled="disabled"></td>
-        <td><input type="text" name="r2c2" id="eigen-r2c2" disabled="disabled"></td>
-    </tr>
-    <tr>
-        <td>Eigenvector</td>
-        <td><input type="text" name="v1" id="eigen-v1" disabled="disabled"></td>
-        <td><input type="text" name="v2" id="eigen-v2" disabled="disabled"></td>
-    </tr>
-</table> -->
