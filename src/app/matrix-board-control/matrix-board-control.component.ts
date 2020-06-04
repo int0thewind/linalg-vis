@@ -37,7 +37,6 @@ export class MatrixBoardControlComponent implements OnInit {
 
   ngOnInit(): void {
     this.initDataSubscribe();
-    this.getMatEigs();
   }
 
   initDataSubscribe(): void {
@@ -52,12 +51,10 @@ export class MatrixBoardControlComponent implements OnInit {
     this.data.xScaleSource.subscribe((newXScale) => {
       console.log('Matrix Board Control: receives new x Scale');
       this.xScale = newXScale;
-      // TODO! What to do after getting new x scale?
     });
     this.data.yScaleSource.subscribe((newYScale) => {
       console.log('Matrix Board Control: receives new y Scale');
       this.yScale = newYScale;
-      // TODO! What to do after getting new y scale?
     });
   }
 
