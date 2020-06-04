@@ -3,6 +3,7 @@ import { Matrix } from 'mathjs';
 import * as d3 from 'd3';
 import { Shape, Vector } from '../shape';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-matrix-board',
@@ -30,33 +31,49 @@ export class MatrixBoardComponent implements OnInit {
 
   matrix: Matrix;
 
+  isInit = false;
+
   constructor(private data: MatrixBoardDataService) {}
 
   ngOnInit(): void {
     this.initDataSubscribe();
     this.initCoordinate();
+    this.initOrUpdateBaseVectors();
     this.renderShapes();
+    this.isInit = true;
   }
 
   initDataSubscribe(): void {
     this.data.matrixSource.subscribe((newMatrix) => {
       console.log('Matrix Board: receives new matrix data');
       this.matrix = newMatrix;
+      if (this.isInit) {
+        this.initOrUpdateBaseVectors();
+        this.renderShapes();
+      }
     });
     this.data.shapesSource.subscribe((newListOfShape) => {
       console.log('Matrix Board: receives new shape list');
       this.shapeList = newListOfShape;
-      this.renderShapes();
+      if (this.isInit) {
+        this.renderShapes();
+      }
     });
     this.data.xScaleSource.subscribe((newXScale) => {
       console.log('Matrix Board: receives new x Scale');
       this.xScale = newXScale;
-      // TODO! What to do after getting new x scale?
+      if (this.isInit) {
+        this.initOrUpdateBaseVectors();
+        this.renderShapes();
+      }
     });
     this.data.yScaleSource.subscribe((newYScale) => {
       console.log('Matrix Board: receives new y Scale');
       this.yScale = newYScale;
-      // TODO! What to do after getting new y scale?
+      if (this.isInit) {
+        this.initOrUpdateBaseVectors();
+        this.renderShapes();
+      }
     });
   }
 
@@ -68,8 +85,6 @@ export class MatrixBoardComponent implements OnInit {
     // Update global xScale and yScale
     // Observables are so great!
     // I thought I can never get the new xScale and yScale before rendering the shape, but it just works!
-    // this.xScale.domain([-this.range, this.range]).range([this.margin.left, width - this.margin.right]);
-    // this.yScale.domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]);
     this.data.setXScale(d3.scaleLinear().domain([-this.range, this.range]).range([this.margin.left, width - this.margin.right]));
     this.data.setYScale(d3.scaleLinear().domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]));
     // All the groups under the svg
@@ -99,13 +114,6 @@ export class MatrixBoardComponent implements OnInit {
         .style('stroke', '#cccccc')
         .style('stroke-dasharray', dashArray);
     }
-    // Init base vectors
-    this.baseVectors.forEach((vector) => {
-      if (document.getElementById(vector.id)) {
-        vector.remove();
-      }
-      vector.render(baseVectorGroup, this.matrix, this.xScale, this.yScale);
-    });
     // Modify zero points
     document.querySelectorAll('g.tick > text').forEach((textElem) => {
       if (textElem.innerHTML === '0') {
@@ -118,6 +126,19 @@ export class MatrixBoardComponent implements OnInit {
       .attr('cy', this.yScale(0))
       .attr('r', 3)
       .style('fill', 'black');
+  }
+
+  /**
+   * This function can also update the base vectors when the base vectors are already rendered.
+   */
+  initOrUpdateBaseVectors(): void {
+    const baseVectorGroup = d3.select('g.base-vector');
+    this.baseVectors.forEach((vector) => {
+      if (document.getElementById(vector.id)) {
+        vector.remove();
+      }
+      vector.render(baseVectorGroup, this.matrix, this.xScale, this.yScale);
+    });
   }
 
   renderShapes(): void {

@@ -68,7 +68,7 @@ export class MatrixBoardControlComponent implements OnInit {
 
   getMatElem(row: number, column: number): number {
     console.log(`Matrix Board Control: getting matrix row ${row} and column ${column}`);
-    return this.matrix.get([column, row]);
+    return this.matrix.get([row, column]);
   }
 
   getMatEigs() {
@@ -78,9 +78,8 @@ export class MatrixBoardControlComponent implements OnInit {
 
   updateMatrix(r1c1: any, r1c2: any, r2c1: any, r2c2: any) {
     console.log('Matrix Board Control: updating matrix');
-    const mat = matrix([[parseFloat(r1c1), parseFloat(r2c1)],
-                        [parseFloat(r1c2), parseFloat(r2c2)]]);
+    const mat = matrix([[parseFloat(r1c1), parseFloat(r1c2)],
+                        [parseFloat(r2c1), parseFloat(r2c2)]]);
     this.data.setMatrix(mat);
   }
-
 }
