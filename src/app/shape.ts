@@ -69,16 +69,6 @@ export abstract class Shape {
     remove(): void {
         d3.select(`#${this.id}`).remove();
     }
-
-    /**
-     * Helper function to convert a point's relative position to absolute position.
-     * @param matrix The target linear space to get the point transformed to.
-     * @param point The point to be transformed.
-     */
-    transformPoints(matrix: math.Matrix, point: Point): Point {
-        const p = math.multiply(matrix, point.toArray()).toArray();
-        return new Point(p[0], p[1]);
-    }
 }
 
 export class Polygon extends Shape {
@@ -105,7 +95,7 @@ export class Polygon extends Shape {
     getPointsString(matrix: math.Matrix, xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): string {
         let pointsString = '';
         for (const point of this.points) {
-            const p = this.transformPoints(matrix, point);
+            const p = math.multiply(matrix, point.toArray()).toArray();
             pointsString += `${xScale(p[0])},${yScale(p[1])} `;
         }
         return pointsString.trim();
