@@ -30,22 +30,22 @@
         <option *ngFor='let shapeType of acceptedShapes' [ngValue]="shapeType">{{ shapeType }}</option>
     </select>
     <div *ngIf="currType === 'Vector'">
-        Vector selected.
-        <button>Add Shape</button>
+        <label for="vector-x1">x1: </label><input #vectorx1 type="number" name="vector" id="vector-x1" value="1"><br>
+        <label for="vector-x1">y1: </label><input #vectory1 type="number" name="vector" id="vector-y1" value="1"><br>
+        <label for="vector-x1">x2: </label><input #vectorx2 type="number" name="vector" id="vector-x2" value="2"><br>
+        <label for="vector-x1">y2: </label><input #vectory2 type="number" name="vector" id="vector-y2" value="2"><br>
+        <label for="vector-color">Color: </label><input #vectorcolor type="color" name="vector" id="vector-color"><br>
+        <button (click)="addVector(vectorcolor.value, vectorx1.value, vectory1.value, vectorx2.value, vectory2.value)">Add Vector</button>
     </div>
     <div *ngIf="currType === 'Rectangle'">
-        Rectangle selected.
-        <button>Add Shape</button>
+        <button>Add Rectangle</button>
     </div>
     <div *ngIf="currType === 'Ellipse'">
-        Ellipse selected
-        <button>Add Shape</button>
+        <button>Add Ellipse</button>
     </div>
     <div *ngIf="currType === 'Polygon'">
-        Polygon selected
-        <button>Add Shape</button>
+        <button>Add Polygon</button>
     </div>
     <div *ngIf="currType === 'Dot'">
-        Dot selected
-        <button>Add Shape</button>
+        <button>Add Dot</button>
     </div>

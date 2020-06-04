@@ -22,6 +22,8 @@ export class MatrixBoardControlComponent implements OnInit {
 
   yScale = d3.scaleLinear();
 
+  id = 1;
+
   constructor(private data: MatrixBoardDataService) { }
 
   ngOnInit(): void {
@@ -78,5 +80,12 @@ export class MatrixBoardControlComponent implements OnInit {
     const mat = matrix([[parseFloat(r1c1), parseFloat(r1c2)],
                         [parseFloat(r2c1), parseFloat(r2c2)]]);
     this.data.setMatrix(mat);
+  }
+
+  addVector(color: string, x1: any, y1: any, x2: any, y2: any) {
+    const newList = this.shapeList;
+    newList.push(new Vector(`shape-${this.id}`, color, parseFloat(x1), parseFloat(y1), parseFloat(x2), parseFloat(y2)));
+    this.data.setShapes(newList);
+    this.id++;
   }
 }

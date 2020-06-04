@@ -3,7 +3,6 @@ import { Matrix } from 'mathjs';
 import * as d3 from 'd3';
 import { Shape, Vector } from '../shape';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-matrix-board',
@@ -39,7 +38,7 @@ export class MatrixBoardComponent implements OnInit {
     this.initDataSubscribe();
     this.initCoordinate();
     this.initOrUpdateBaseVectors();
-    this.renderShapes();
+    this.initOrUpdateShapes();
     this.isInit = true;
   }
 
@@ -49,14 +48,14 @@ export class MatrixBoardComponent implements OnInit {
       this.matrix = newMatrix;
       if (this.isInit) {
         this.initOrUpdateBaseVectors();
-        this.renderShapes();
+        this.initOrUpdateShapes();
       }
     });
     this.data.shapesSource.subscribe((newListOfShape) => {
       console.log('Matrix Board: receives new shape list');
       this.shapeList = newListOfShape;
       if (this.isInit) {
-        this.renderShapes();
+        this.initOrUpdateShapes();
       }
     });
     this.data.xScaleSource.subscribe((newXScale) => {
@@ -64,7 +63,7 @@ export class MatrixBoardComponent implements OnInit {
       this.xScale = newXScale;
       if (this.isInit) {
         this.initOrUpdateBaseVectors();
-        this.renderShapes();
+        this.initOrUpdateShapes();
       }
     });
     this.data.yScaleSource.subscribe((newYScale) => {
@@ -72,7 +71,7 @@ export class MatrixBoardComponent implements OnInit {
       this.yScale = newYScale;
       if (this.isInit) {
         this.initOrUpdateBaseVectors();
-        this.renderShapes();
+        this.initOrUpdateShapes();
       }
     });
   }
@@ -142,11 +141,12 @@ export class MatrixBoardComponent implements OnInit {
     });
   }
 
-  renderShapes(): void {
+  initOrUpdateShapes(): void {
     console.log('Matrix Board: rendering shapes!');
     const target = d3.select('g.shape');
     this.shapeList.forEach((elem) => {
       if (document.getElementById(elem.id)) {
+        console.log('%c Item found! Remove it!', 'color: green');
         elem.remove();
       }
       elem.render(target, this.matrix, this.xScale, this.yScale);
