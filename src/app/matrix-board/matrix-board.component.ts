@@ -88,10 +88,11 @@ export class MatrixBoardComponent implements OnInit {
     this.data.setYScale(d3.scaleLinear().domain([-this.range, this.range]).range([height - this.margin.bottom, this.margin.top]));
     // All the groups under the svg
     const axisGroup = d3.select('g.axis');
-    const xAxisGroup = axisGroup.append('g').attr('class', 'x-axis').style('transform', `translate(0px, ${height / 2}px)`);
-    const yAxisGroup = axisGroup.append('g').attr('class', 'y-axis').style('transform', `translate(${width / 2}px, 0px)`);
-    const gridLineGroup = axisGroup.append('g').attr('class', 'grid-line');
-    const baseVectorGroup = axisGroup.append('g').attr('class', 'base-vector');
+    const xAxisGroup = d3.select('g.x-axis');
+    xAxisGroup.style('transform', `translate(0px, ${height / 2}px)`);
+    const yAxisGroup = d3.select('g.y-axis');
+    yAxisGroup.style('transform', `translate(${width / 2}px, 0px)`);
+    const gridLineGroup = d3.select('g.grid-line');
     // Call scales to append axises.
     xAxisGroup.call(d3.axisTop(this.xScale));
     yAxisGroup.call(d3.axisLeft(this.yScale));
