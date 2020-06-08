@@ -150,7 +150,10 @@ export class MatrixBoardComponent implements OnInit {
         console.log('%c Item found! Remove it!', 'color: green');
         elem.remove();
       }
-      elem.render(target, this.matrix, () => {this.removeShape(elem.id); }, this.xScale, this.yScale);
+      elem.render(target, this.matrix, () => {
+          d3.select('div.tip').style('opacity', 0);
+          this.removeShape(elem.id);
+        }, this.xScale, this.yScale);
     });
   }
 

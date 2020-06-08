@@ -2,3 +2,16 @@ svg.board {
     width: min(80vh, 800px);
     height: min(80vh, 800px);
 }
+
+div.tip {
+    font-size: 10pt;
+    font-family: monospace;
+    position: absolute;
+    border-width: 1px;
+    border-color: grey;
+    border-style: solid;
+    border-radius: 1px;
+    background-color: whitesmoke;
+    width: auto;
+    height: auto;
+}

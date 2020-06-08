@@ -42,7 +42,22 @@ export abstract class Shape {
     }
 
     toString(): string {
-        return `${this.class}, id ${this.id}.`;
+        return `${this.class}\n id ${this.id}.`;
+    }
+
+    protected mouseoverFunc = () => {
+        console.log('mouseover!!!' + this.toString());
+        const tip = d3.select('div.tip');
+        tip.html(this.toString())
+            .style('opacity', 0.9)
+            .style('left', d3.event.pageX + 'px')
+            .style('top', (d3.event.pageY - 28) + 'px');
+    }
+
+    protected mouseoutFunc = () => {
+        console.log('mouseout!!!');
+        const tip = d3.select('div.tip');
+        tip.style('opacity', 0);
     }
 }
 
@@ -65,7 +80,9 @@ export class Polygon extends Shape {
         polyGroup.append('polygon')
             .attr('points', pointsString)
             .style('fill', this.color)
-            .on('click', clickCallback);
+            .on('click', clickCallback)
+            .on('mouseover', this.mouseoverFunc)
+            .on('mouseout', this.mouseoutFunc);
     }
 
     getPointsString(matrix: math.Matrix, xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): string {
@@ -116,7 +133,9 @@ export class Ellipse extends Shape {
                 .attr('rx', rxn)
                 .attr('ry', ryn)
                 .style('fill', this.color)
-                .on('click', clickCallback);
+                .on('click', clickCallback)
+                .on('mouseover', this.mouseoverFunc)
+                .on('mouseout', this.mouseoutFunc);
     }
 }
 
@@ -135,7 +154,9 @@ export class Dot extends Shape {
             .attr('cy', yScale(p[1]))
             .attr('r', 3)
             .style('fill', this.color)
-            .on('click', clickCallback);
+            .on('click', clickCallback)
+            .on('mouseover', this.mouseoverFunc)
+            .on('mouseout', this.mouseoutFunc);
     }
 }
 
@@ -168,13 +189,17 @@ export class Vector extends Shape {
             .attr('y2', yScale(p2[1]))
             .style('stroke', this.color)
             .style('stroke-width', 2)
-            .on('click', clickCallback);
+            .on('click', clickCallback)
+            .on('mouseover', this.mouseoverFunc)
+            .on('mouseout', this.mouseoutFunc);
         vectorGroup.append('circle')
             .attr('cx', xScale(p2[0]))
             .attr('cy', yScale(p2[1]))
             .attr('r', 3)
             .style('stroke', this.color)
             .style('fill', this.color)
-            .on('click', clickCallback);
+            .on('click', clickCallback)
+            .on('mouseover', this.mouseoverFunc)
+            .on('mouseout', this.mouseoutFunc);
     }
 }
