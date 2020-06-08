@@ -20,31 +20,13 @@ export class Point {
  * In order to be attached onto the coordinate system, the object must implement several necessary functionalities.
  */
 export abstract class Shape {
-    /**
-     * DOM class attribute of the svg shape.
-     * Conventionally, it should be the name of the shape.
-     * For example, if the shape is a vector, then name the class to be "vector".
-     */
+
     class: string;
 
-    /**
-     * Dom id attribute of the svg shape.
-     * It must be unique! Constructor must assert it.
-     */
     id: string;
 
-    /**
-     * Color of the shape.
-     * It must be accepted as HTML DOM readdable color, like "red" or "rgba(0, 0, 0, 0)".
-     */
     color: string;
 
-    /**
-     * Constructor of the base abstract class
-     * @param cls the html class attribute to be applied onto the SVG group html tag
-     * @param id the html id attribute to be applied onto the SVG group html tag. The id must be unique.
-     * @param color the color of the shape
-     */
     protected constructor(cls: string, id: string, color: string) {
         console.assert(!document.getElementById(id), `The id "${id}" is already in use.`);
         this.class = cls;
@@ -52,22 +34,15 @@ export abstract class Shape {
         this.color = color;
     }
 
-    /**
-     * Calling this function to render the shape to the target.
-     * @see d3.Selection
-     * @param target the target place to render shape onto it.
-     * @param matrix use the matrix to get the relative coordinate of the shape
-     * @param xScale the xScale to transform relative coordinate to absolute position
-     * @param yScale the yScale to transform relative coordinate to absolute position
-     */
-    abstract render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
+    abstract render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix, clickCallback: () => void,
                     xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void;
 
-    /**
-     * Calling this function to remove the shape on the coordinate system.
-     */
     remove(): void {
         d3.select(`#${this.id}`).remove();
+    }
+
+    toString(): string {
+        return `${this.class}, id ${this.id}.`;
     }
 }
 
@@ -80,7 +55,7 @@ export class Polygon extends Shape {
         this.points = points;
     }
 
-    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
+    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix, clickCallback: () => void,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
         const pointsString = this.getPointsString(matrix, xScale, yScale);
         console.log(`%c ${pointsString}`, `color: orange`);
@@ -89,7 +64,8 @@ export class Polygon extends Shape {
             .attr('id', this.id);
         polyGroup.append('polygon')
             .attr('points', pointsString)
-            .style('fill', this.color);
+            .style('fill', this.color)
+            .on('click', clickCallback);
     }
 
     getPointsString(matrix: math.Matrix, xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): string {
@@ -124,7 +100,7 @@ export class Ellipse extends Shape {
         this.ry = ry;
     }
 
-    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
+    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix, clickCallback: () => void,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
             const det = math.det(matrix);
             const rxn = this.rx * det;
@@ -139,7 +115,8 @@ export class Ellipse extends Shape {
                 .attr('cy', yScale(p[1]))
                 .attr('rx', rxn)
                 .attr('ry', ryn)
-                .style('fill', this.color);
+                .style('fill', this.color)
+                .on('click', clickCallback);
     }
 }
 
@@ -147,7 +124,7 @@ export class Dot extends Shape {
     constructor(id: string, color: string, public x: number, public y: number) {
         super('dot', id, color);
     }
-    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
+    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix, clickCallback: () => void,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
         const p = math.multiply(matrix, [this.x, this.y]).toArray();
         const dotGroup = target.append('g')
@@ -157,7 +134,8 @@ export class Dot extends Shape {
             .attr('cx', xScale(p[0]))
             .attr('cy', yScale(p[1]))
             .attr('r', 3)
-            .style('fill', this.color);
+            .style('fill', this.color)
+            .on('click', clickCallback);
     }
 }
 
@@ -175,7 +153,7 @@ export class Vector extends Shape {
         this.y2 = y2;
     }
 
-    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix,
+    render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix, clickCallback: () => void,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void{
         const vectorGroup = target.append('g')
             .attr('class', this.class)
@@ -189,12 +167,14 @@ export class Vector extends Shape {
             .attr('x2', xScale(p2[0]))
             .attr('y2', yScale(p2[1]))
             .style('stroke', this.color)
-            .style('stroke-width', 2);
+            .style('stroke-width', 2)
+            .on('click', clickCallback);
         vectorGroup.append('circle')
             .attr('cx', xScale(p2[0]))
             .attr('cy', yScale(p2[1]))
             .attr('r', 3)
             .style('stroke', this.color)
-            .style('fill', this.color);
+            .style('fill', this.color)
+            .on('click', clickCallback);
     }
 }

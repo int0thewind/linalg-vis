@@ -138,7 +138,7 @@ export class MatrixBoardComponent implements OnInit {
       if (document.getElementById(vector.id)) {
         vector.remove();
       }
-      vector.render(baseVectorGroup, this.matrix, this.xScale, this.yScale);
+      vector.render(baseVectorGroup, this.matrix, undefined, this.xScale, this.yScale);
     });
   }
 
@@ -150,7 +150,7 @@ export class MatrixBoardComponent implements OnInit {
         console.log('%c Item found! Remove it!', 'color: green');
         elem.remove();
       }
-      elem.render(target, this.matrix, this.xScale, this.yScale);
+      elem.render(target, this.matrix, () => {this.removeShape(elem.id); }, this.xScale, this.yScale);
     });
   }
 
