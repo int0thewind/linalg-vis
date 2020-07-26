@@ -29,23 +29,29 @@
     <select type="text" [(ngModel)]="currType">
         <option *ngFor='let shapeType of acceptedShapes' [ngValue]="shapeType">{{ shapeType }}</option>
     </select>
+    <label for="color-select">Color: </label><input #color type="color" name="color-select" id="color-select"><br>
     <div *ngIf="currType === 'Vector'">
         <label for="vector-x1">x1: </label><input #vectorx1 type="number" name="vector" id="vector-x1" value="1"><br>
         <label for="vector-x1">y1: </label><input #vectory1 type="number" name="vector" id="vector-y1" value="1"><br>
         <label for="vector-x1">x2: </label><input #vectorx2 type="number" name="vector" id="vector-x2" value="2"><br>
         <label for="vector-x1">y2: </label><input #vectory2 type="number" name="vector" id="vector-y2" value="2"><br>
-        <label for="vector-color">Color: </label><input #vectorcolor type="color" name="vector" id="vector-color"><br>
-        <button (click)="addVector(vectorcolor.value, vectorx1.value, vectory1.value, vectorx2.value, vectory2.value)">Add Vector</button>
+        <button (click)="addVector(color.value, vectorx1.value, vectory1.value, vectorx2.value, vectory2.value)">Add Vector</button>
     </div>
     <div *ngIf="currType === 'Rectangle'">
         <button>Add Rectangle</button>
     </div>
     <div *ngIf="currType === 'Ellipse'">
-        <button>Add Ellipse</button>
+        <label for="ellipse-cx">cx: </label><input #ellipsecx type="number" name="ellipse" id="ellipse-cx" value="1"><br>
+        <label for="ellipse-cy">cy: </label><input #ellipsecy type="number" name="ellipse" id="ellipse-cy" value="1"><br>
+        <label for="ellipse-rx">rx: </label><input #ellipserx type="number" name="ellipse" id="ellipse-rx" value="2"><br>
+        <label for="ellipse-ry">ry: </label><input #ellipsery type="number" name="ellipse" id="ellipse-ry" value="2"><br>
+        <button (click)="addEllipse(color.value, ellipsecx.value, ellipsecy.value, ellipserx.value, ellipsery.value)">Add Ellipse</button>
     </div>
     <div *ngIf="currType === 'Polygon'">
         <button>Add Polygon</button>
     </div>
     <div *ngIf="currType === 'Dot'">
-        <button>Add Dot</button>
+        <label for="dot-x">cx: </label><input #dotx type="number" name="dot" id="dot-x" value="1"><br>
+        <label for="dot-y">cy: </label><input #doty type="number" name="dot" id="dot-y" value="1"><br>
+        <button (click)="addDot(color.value, dotx.value, doty.value)">Add Dot</button>
     </div>

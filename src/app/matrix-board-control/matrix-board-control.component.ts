@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Shape, Vector, Dot, Ellipse, Rectangle, Polygon } from '../shape';
-import { Matrix, det, eigs, matrix, zeros } from 'mathjs';
+import { Matrix, det, eigs, matrix } from 'mathjs';
 import { MatrixBoardDataService } from '../matrix-board-data.service';
 import * as d3 from 'd3';
 
@@ -82,10 +82,25 @@ export class MatrixBoardControlComponent implements OnInit {
     this.data.setMatrix(mat);
   }
 
+  private getId() {
+    return `shape-${this.id++}`;
+  }
+
   addVector(color: string, x1: any, y1: any, x2: any, y2: any) {
     const newList = this.shapeList;
-    newList.push(new Vector(`shape-${this.id}`, color, parseFloat(x1), parseFloat(y1), parseFloat(x2), parseFloat(y2)));
+    newList.push(new Vector(this.getId(), color, parseFloat(x1), parseFloat(y1), parseFloat(x2), parseFloat(y2)));
     this.data.setShapes(newList);
-    this.id++;
+  }
+
+  addEllipse(color: string, cx: any, cy: any, rx: any, ry: any) {
+    const newList = this.shapeList;
+    newList.push(new Ellipse(this.getId(), color, parseFloat(cx), parseFloat(cy), parseFloat(rx), parseFloat(ry)));
+    this.data.setShapes(newList);
+  }
+
+  addDot(color: string, x: any, y: any) {
+    const newList = this.shapeList;
+    newList.push(new Dot(this.getId(), color, parseFloat(x), parseFloat(y)));
+    this.data.setShapes(newList);
   }
 }

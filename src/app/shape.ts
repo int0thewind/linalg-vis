@@ -120,6 +120,8 @@ export class Ellipse extends Shape {
     render(target: d3.Selection<d3.BaseType, unknown, HTMLElement, any>, matrix: math.Matrix, clickCallback: () => void,
            xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>): void {
             const det = math.det(matrix);
+            const rxp = [this.cx + this.rx, this.cy];
+            const ryp = [this.cx, this.cy + this.ry];
             const rxn = this.rx * det;
             const ryn = this.ry * det;
             const p = math.multiply(matrix, [this.cx, this.cy]).toArray();
